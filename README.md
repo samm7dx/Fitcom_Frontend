@@ -6,6 +6,6 @@ and creator tools — all in one platform. Think social fitness meets competitio
 HTML • CSS • JavaScript • Chart.js • AOS (Animate on Scroll)  
 
 💡 Features: 
-Track workouts with charts  
-Compete on city leaderboards 
-Share fitness reels & amp; threads
+1. Track workouts with charts  
+2. Compete on city leaderboards 
+3. Share fitness reels & amp; threads
