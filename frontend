@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Fitcom - Fitness Meets Competition</title>
+
+  <!-- AOS CSS -->
+  <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
+
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    :root {
+      --blue-neon: #00dfff;
+      --background: #000;
+      --gray-dark: #181818;
+      --gray-light: #2a2a2a;
+      --white: #fff;
+      --gradient-blue: linear-gradient(135deg,#00dfff,#006bb3);
+    }
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+    body {
+      background: var(--background);
+      color: var(--white);
+      font-family: -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+      font-weight:600;font-size:14px;line-height:1.6;
+      transition: background 0.3s, color 0.3s;
+    }
+    body.light-mode {
+      --background: #fff;
+      --gray-dark: #f1f1f1;
+      --gray-light: #e1e1e1;
+      --white: #000;
+    }
+    header, footer { background: var(--gray-dark); padding:20px; text-align:center; }
+    .logo{font-size:2.4rem;font-weight:bold;color: var(--blue-neon);}    
+    .btn { padding:14px 28px; background: var(--gradient-blue); color: var(--white); border:none; border-radius:6px; font-weight:700; text-transform:uppercase; letter-spacing:1px; cursor:pointer; transition:transform .3s,box-shadow .3s; box-shadow:0 0 10px rgba(0,223,255,0.6); margin:6px; }
+    .btn:hover { transform:scale(1.05); box-shadow:0 0 20px rgba(0,223,255,0.8); }
+    .section { padding:60px 20px; text-align:center; background: var(--background); }
+    .section h1, .section h2 { color: var(--blue-neon); font-size:22px; margin-bottom:16px; text-transform:uppercase; letter-spacing:1px; }
+    .section p { margin:12px 0; color: var(--white); }
+    .card { background: var(--gray-light); margin:20px auto; padding:25px; border-radius:8px; max-width:820px; box-shadow:0 0 15px rgba(0,0,0,0.5); text-align:left; position:relative; }
+    .waitlist-form, .progress-form { display:inline-flex; align-items:center; flex-wrap:wrap; justify-content:center; gap:10px; margin:16px 0; }
+    .waitlist-form input, .progress-form input { padding:12px; width:150px; border-radius:6px; border:none; font-size:13px; font-weight:600; background: var(--gray-dark); color: var(--white); }
+    .waitlist-form input::placeholder, .progress-form input::placeholder { color:#aaa; }
+    ul { padding-left:20px; text-align:left; display:inline-block; }
+    ul li { list-style:none; margin:8px 0; position:relative; padding-left:24px; color: var(--white); }
+    ul li::before { content:"■"; position:absolute; color: var(--blue-neon); font-size:10px; left:0; top:0; margin-top:4px; }
+    .modal { display:none; position:fixed; z-index:10; left:0; top:0; width:100%; height:100%; background:rgba(0,0,0,0.8); align-items:center; justify-content:center; padding:20px; }
+    .modal.active { display:flex; }
+    .modal-content { background: var(--gray-light); padding:20px; border-radius:8px; text-align:center; max-width:400px; width:100%; position:relative; }
+    .close-btn { background:transparent; border:none; font-size:1.5rem; position:absolute; top:10px; right:20px; color:#fff; cursor:pointer; }
+    #progressChart { max-width:800px; margin:20px auto; background: var(--gray-light); padding:20px; border-radius:8px; }
+    .theme-toggle { position:fixed; top:20px; right:20px; background:var(--gray-light); border:none; padding:10px; border-radius:50%; cursor:pointer; box-shadow:0 0 10px rgba(0,0,0,0.5); }
+    @media(max-width:600px){ .card img{display:none;} .waitlist-form input, .progress-form input{width:100%;} }
+  </style>
+</head>
+<body data-aos-easing="ease" data-aos-duration="600">
+  <button class="theme-toggle" title="Toggle Light/Dark">🌓</button>
+  <header data-aos="fade-down"><div class="logo">Fitcom</div></header>
+
+  <!-- Hero & Waitlist -->
+  <section class="section" data-aos="fade-up" style="background:url('https://images.unsplash.com/photo-1554284126-2e6086ab403f?auto=format&fit=crop&w=1600&q=80') center/cover;">
+    <div style="background:rgba(0,0,0,0.7);padding:60px 20px;">
+      <h2>Fitness meets competition.</h2>
+      <p>This is your shot at <span style="color:var(--blue-neon);">local dominance</span>.</p>
+      <p><strong style="color:var(--blue-neon);">JOIN THE WAITLIST NOW</strong></p>
+      <div class="waitlist-form">
+        <input id="waitEmail" type="email" placeholder="Enter Email" required>
+        <button id="joinBtn" class="btn">Join the Waitlist</button>
+      </div>
+      <p id="waitCount">1,248 already joined</p>
+    </div>
+  </section>
+
+  <!-- Visual Preview -->
+  <section class="section" data-aos="fade-up">
+    <h2>Animated Preview</h2>
+    <p>Visual: Animated preview showing progress tracking + leaderboard</p>
+  </section>
+
+  <!-- What is Fitcom -->
+  <section class="section" data-aos="fade-up">
+    <h1>What is Fitcom?</h1>
+    <p>Fitcom is where fitness meets community.</p>
+    <p>Whether you’re grinding solo or sharing gains with the world, Fitcom helps you:</p>
+    <ul>
+      <li>City Leaderboards – Compete locally, rank globally.</li>
+      <li>Fitness Reels & Threads – Share wins, rants, and raw moments.</li>
+      <li>Progress Tracking – See real results, not just reps.</li>
+      <li>Influencer Marketplace – Sell plans. Buy motivation.</li>
+    </ul>
+  </section>
+
+  <!-- Differentiators -->
+  <section class="section" data-aos="fade-up">
+    <h1>What Makes Fitcom Different</h1>
+    <blockquote style="font-size:1.2rem; margin:20px 0; color:var(--white);"><em>“We’re not a fitness tracker. We’re a movement.”</em></blockquote>
+    <div class="card" data-aos="fade-up">
+      <ul>
+        <li>Built by athletes</li>
+        <li>Designed for creators</li>
+        <li>Rooted in community</li>
+        <li>Fueled by competition</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Social Proof -->
+  <section class="section" data-aos="fade-up">
+    <h1>Social Proof</h1>
+    <div class="card">
+      <p>“I’ve been waiting for something like this” — Beta Creator</p>
+      <p><strong id="socialCount">1,248</strong> already joined</p>
+    </div>
+  </section>
+
+  <!-- Creator Hub -->
+  <section class="section" data-aos="fade-up">
+    <h1>Creator Hub</h1>
+    <p>Goal: Convince fitness creators to partner early</p>
+    <ul>
+      <li>Why Fitcom is Built for Creators</li>
+      <li>Early Monetization Tools</li>
+      <li>Grow Your Community Inside the App</li>
+    </ul>
+    <div class="waitlist-form">
+      <input id="creatorEmail" type="email" placeholder="Enter your email">
+      <button id="applyBtn" class="btn">Apply as a Creator Partner</button>
+    </div>
+  </section>
+
+  <!-- Progress Tracker -->
+  <section class="section" data-aos="fade-up">
+    <div class="card" data-aos="fade-up">
+      <h3 style="color:var(--blue-neon);">Track & Save Your Progress</h3>
+      <div class="progress-form">
+        <input id="exName" type="text" placeholder="Exercise (e.g. Squat)">
+        <input id="exWeight" type="number" placeholder="Weight (kg)">
+        <input id="exReps" type="number" placeholder="Reps">
+        <button id="saveBtn" class="btn">Save Progress</button>
+        <button id="graphBtn" class="btn">View Graph</button>
+      </div>
+      <p>Enter your workout details above to log progress. Visualize improvements over time with interactive charts.</p>
+    </div>
+  </section>
+
+  <!-- Chart Modal -->
+  <div id="chartModal" class="modal">
+    <div class="modal-content">
+      <button class="close-btn" id="closeChart">&times;</button>
+      <canvas id="progressChart"></canvas>
+    </div>
+  </div>
+
+  <!-- About Founder -->
+  <section class="section" data-aos="fade-up">
+    <h1>About the Founder</h1>
+    <blockquote style="font-size:1rem; color:var(--white);">
+      “I’m a college student, powerlifter, and community builder — and I was tired of how empty fitness apps felt… I wanted something that tracked progress, rewarded consistency, and built community — so I built it.”<br>
+      — Devraj Patel (Founder)
+    </blockquote>
+  </section>
+
+  <footer data-aos="fade-up"><p>&copy; 2025 Fitcom. All rights reserved.</p></footer>
+
+  <!-- AOS JS -->
+  <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+  <script>
+    AOS.init();
+
+    // Theme Toggle
+    const toggleBtn = document.querySelector('.theme-toggle');
+    toggleBtn.addEventListener('click', () => {
+      document.body.classList.toggle('light-mode');
+      localStorage.setItem('theme', document.body.classList.contains('light-mode') ? 'light' : 'dark');
+    });
+    if (localStorage.getItem('theme') === 'light') document.body.classList.add('light-mode');
+
+    // Waitlist & Creator Signup alerts
+    document.getElementById('joinBtn').addEventListener('click', () => alert('Thanks for joining our waitlist!'));
+    document.getElementById('applyBtn').addEventListener('click', () => alert('Thanks for applying as a Creator Partner!'));
+
+    // Progress Storage & Chart
+    const saveBtn = document.getElementById('saveBtn');
+    const graphBtn = document.getElementById('graphBtn');
+    const exName = document.getElementById('exName');
+    const exWeight = document.getElementById('exWeight');
+    const exReps = document.getElementById('exReps');
+    const chartModal = document.getElementById('chartModal');
+    const closeChart = document.getElementById('closeChart');
+    let progressData = JSON.parse(localStorage.getItem('fitcomProgress') || '[]');
+    let progressChart;
+
+    saveBtn.addEventListener('click', () => {
+      if (!exName.value || !exWeight.value || !exReps.value) return alert('Please fill in all fields!');
+      const entry = { name: exName.value, weight: +exWeight.value, reps: +exReps.value, date: new Date().toISOString().split('T')[0] };
+      progressData.push(entry);
+      localStorage.setItem('fitcomProgress', JSON.stringify(progressData));
+      exName.value = ''; exWeight.value = ''; exReps.value = '';
+      alert('Progress saved!');
+    });
+
+    graphBtn.addEventListener('click', () => {
+      chartModal.classList.add('active');
+      const labels = progressData.map(e => e.date);
+      const weights = progressData.map(e => e.weight);
+      if (progressChart) progressChart.destroy();
+      progressChart = new Chart(document.getElementById('progressChart'), {
+        type: 'line',
+        data: { labels, datasets: [{ label: 'Weight', data: weights, borderColor: 'var(--blue-neon)', backgroundColor: 'rgba(0,223,255,0.2)', fill: true }] },
+        options: { scales: { x:{ display:true }, y:{ display:true, beginAtZero:true } } }
+      });
+    });
+
+    closeChart.addEventListener('click', () => chartModal.classList.remove('active'));
+  </script>
+</body>
+</html>
