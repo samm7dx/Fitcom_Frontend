@@ -1,7 +1,7 @@
 # Fitcom_Frontend
 Fitcom is a fitness web app that combines progress tracking, local leaderboards,
 and creator tools — all in one platform. Think social fitness meets competition.  
-
+🔗 https://fitcomm.netlify.app/
 🔧 Built With:
 HTML • CSS • JavaScript • Chart.js • AOS (Animate on Scroll)  
 
